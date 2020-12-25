@@ -1,7 +1,6 @@
 import {Command, flags} from '@oclif/command'
 import DefaultConfig from "../default-config"
 import axios from 'axios';
-const commonmark = require('commonmark');
 
 export default class Release extends Command {
     static description = 'create new release'
@@ -17,20 +16,21 @@ export default class Release extends Command {
 
     async run() {
         const {flags} = this.parse(Release);
-        const releaseDescription = await this.getChangeLog(flags.branch, flags.version);
-        this.log(releaseDescription);
+        const releaseDescription = await Release.fetchReleaseDescriptionFromChangeLog(
+            flags.owner,
+            flags.repo,
+            flags.branch,
+            flags.version
+        );
         this.exit();
     }
 
-    private async getChangeLog(branch: string, version: string | undefined): Promise<string> {
-        const owner = DefaultConfig.owner;
-        const repo = DefaultConfig.repo;
+    private static async fetchReleaseDescriptionFromChangeLog(owner: string, repo: string, branch: string, version: string | undefined): Promise<string> {
         const changeLogURL = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/CHANGELOG.md`
-        this.log(`retrieving change log information from: ${changeLogURL}`)
-        const changeLogResponse = await axios.get(changeLogURL);
-        const changeLogData = changeLogResponse.data;
+        const rawChangeLog = await axios.get(changeLogURL);
+        const changeLogData = rawChangeLog.data;
         const regex = new RegExp(`## ${version}([\\s\\S]*?)## \\d`, 'gm');
-        const str =  changeLogData.match(regex)[0];
+        const str = changeLogData.match(regex)[0];
         return str.substring(0, str.lastIndexOf("\n"));
     }
 }

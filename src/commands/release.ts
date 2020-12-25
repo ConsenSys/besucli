@@ -30,6 +30,7 @@ export default class Release extends Command {
         const changeLogResponse = await axios.get(changeLogURL);
         const changeLogData = changeLogResponse.data;
         const regex = new RegExp(`## ${version}([\\s\\S]*?)## \\d`, 'gm');
-        return  changeLogData.match(regex);
+        const str =  changeLogData.match(regex)[0];
+        return str.substring(0, str.lastIndexOf("\n"));
     }
 }

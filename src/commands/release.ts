@@ -2,8 +2,9 @@ import {Command, flags} from '@oclif/command'
 import DefaultConfig from "../default-config"
 import axios from 'axios';
 import cli from 'cli-ux';
-
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const logSymbols = require('log-symbols');
+
 
 export default class Release extends Command {
     static description = 'create new release'
@@ -19,6 +20,7 @@ export default class Release extends Command {
 
     async run() {
         const {flags} = this.parse(Release);
+        this.log(`${logSymbols.info} Starting release process`);
         const releaseDescription = await Release.fetchReleaseDescriptionFromChangeLog(
             flags.owner,
             flags.repo,

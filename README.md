@@ -29,7 +29,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`besucli help [COMMAND]`](#besucli-help-command)
-* [`besucli release [BRANCH] [VERSION]`](#-besucli-release)
+* [`besucli release`](#besucli-release)
 
 ## `besucli help [COMMAND]`
 
@@ -48,7 +48,7 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.1/src/commands/help.ts)_
 
-## ` besucli release`
+## `besucli release`
 
 create new release
 
@@ -57,12 +57,13 @@ USAGE
   $ besucli release
 
 OPTIONS
-  -b, --branch=branch  [default: master] branch to release
+  -b, --branch=branch    [default: master] branch to release
   -f, --force
-  -h, --help           show CLI help
-  -o, --owner=owner    [default: hyperledger] github owner
-  -r, --repo=repo      [default: besu] github repository
+  -h, --help             show CLI help
+  -o, --owner=owner      [default: hyperledger] github owner
+  -r, --repo=repo        [default: besu] github repository
+  -v, --version=version  version to release
 ```
 
-_See code: [src/commands/release.ts](https://github.com/abdelhamidbakhta/besucli/blob/main/src/commands/release.ts)_
+_See code: [src/commands/release.ts](https://github.com/abdelhamidbakhta/besucli/blob/v0.0.1/src/commands/release.ts)_
 <!-- commandsstop -->

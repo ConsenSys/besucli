@@ -93,21 +93,32 @@ export default class Release extends Command {
     }
 
     private static updateWithDownloadInfo(description: string, downloadInfo: DownloadInfo): string {
-        return description;
+        const downloadSection =
+            `
+
+### Download link
+${downloadInfo.link}
+sha256: \`${downloadInfo.integrityHash}\`
+`;
+        return description + downloadSection;
     }
 
     private static async createGithubRelease(owner: string, repo: string, version: string | undefined,
                                              description: string, githubAccessToken: string): Promise<void> {
         cli.action.start('Creating release using Github API');
         await cli.wait();
+        // for testing purpose
+        const releaseName = `${new Date().getTime()}`;
+        //const releaseName = version;
+        const requestPayload = {
+            "tag_name": releaseName,
+            "name": releaseName,
+            "body": description,
+        };
         try {
             await axios.post(
                 `https://api.github.com/repos/${owner}/${repo}/releases`,
-                {
-                    "tag_name": version,
-                    "name": version,
-                    "body": description,
-                }, {
+                requestPayload, {
                     headers: {
                         "Accept": "application/vnd.github.v3+json",
                         "Authorization": `token ${githubAccessToken}`

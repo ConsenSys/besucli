@@ -33,13 +33,18 @@ export default class Release extends Command {
     private static async fetchReleaseDescriptionFromChangeLog(owner: string, repo: string, branch: string, version: string | undefined): Promise<string> {
         cli.action.start('Fetching release description from change log');
         await cli.wait();
-        const changeLogURL = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/CHANGELOG.md`
-        const rawChangeLog = await axios.get(changeLogURL);
-        const changeLogData = rawChangeLog.data;
-        const regex = new RegExp(`## ${version}([\\s\\S]*?)## \\d`, 'gm');
-        const str = changeLogData.match(regex)[0];
-        const releaseDescription = str.substring(0, str.lastIndexOf("\n"));
-        cli.action.stop(logSymbols.success);
-        return releaseDescription;
+        try {
+            const changeLogURL = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/CHANGELOG.md`
+            const rawChangeLog = await axios.get(changeLogURL);
+            const changeLogData = rawChangeLog.data;
+            const regex = new RegExp(`## ${version}([\\s\\S]*?)## \\d`, 'gm');
+            const str = changeLogData.match(regex)[0];
+            const releaseDescription = str.substring(0, str.lastIndexOf("\n"));
+            cli.action.stop(logSymbols.success);
+            return releaseDescription;
+        } catch (e) {
+            cli.action.stop(logSymbols.error);
+            throw e;
+        }
     }
 }

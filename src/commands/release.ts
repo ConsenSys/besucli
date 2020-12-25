@@ -8,6 +8,8 @@ import * as fs from "fs";
 const logSymbols = require('log-symbols');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const download = require('download');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const sha256File = require('sha256-file');
 
 
 export default class Release extends Command {
@@ -32,13 +34,13 @@ export default class Release extends Command {
             flags.version
         );
         const downloadInfo = await Release.generateDownloadInfo(flags.version as string);
-
+        const updatedReleaseDescription = Release.updateWithDownloadInfo(releaseDescription, downloadInfo);
         const githubAccessToken = await Release.getGithubAccessToken();
         await Release.createGithubRelease(
             flags.owner,
             flags.repo,
             flags.version,
-            releaseDescription,
+            updatedReleaseDescription,
             githubAccessToken
         );
         this.exit();
@@ -79,9 +81,7 @@ export default class Release extends Command {
             fs.writeFileSync(tmpFile, await download(downloadLink));
             cli.action.stop(logSymbols.success);
             cli.action.start('Computing integrity hash');
-            new shajs.sha256().update('42').digest('hex')
-            cli.action.stop(logSymbols.success);
-            const integrityHash = "";
+            const integrityHash = sha256File(tmpFile);
             cli.action.stop(logSymbols.success);
             fs.unlinkSync(tmpFile);
             fs.rmdirSync(tmp);
@@ -92,8 +92,12 @@ export default class Release extends Command {
         }
     }
 
+    private static updateWithDownloadInfo(description: string, downloadInfo: DownloadInfo): string {
+        return description;
+    }
 
-    private static async createGithubRelease(owner: string, repo: string, version: string | undefined, description: string, githubAccessToken: string): Promise<void> {
+    private static async createGithubRelease(owner: string, repo: string, version: string | undefined,
+                                             description: string, githubAccessToken: string): Promise<void> {
         cli.action.start('Creating release using Github API');
         await cli.wait();
         try {

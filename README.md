@@ -6,7 +6,7 @@ Besu command line features
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/besucli.svg)](https://npmjs.org/package/besucli)
 [![Downloads/week](https://img.shields.io/npm/dw/besucli.svg)](https://npmjs.org/package/besucli)
-[![License](https://img.shields.io/npm/l/besucli.svg)](https://github.com/abdelhamidbakhta/besucli/blob/master/package.json)
+[![License](https://img.shields.io/npm/l/besucli.svg)](https://github.com/abdelhamidbakhta/besucli/blob/main/package.json)
 
 <!-- toc -->
 * [Usage](#usage)
@@ -62,5 +62,5 @@ OPTIONS
   -h, --help           show CLI help
 ```
 
-_See code: [src/commands/release.ts](https://github.com/abdelhamidbakhta/besucli/blob/master/src/commands/release.ts)_
+_See code: [src/commands/release.ts](https://github.com/abdelhamidbakhta/besucli/blob/main/src/commands/release.ts)_
 <!-- commandsstop -->

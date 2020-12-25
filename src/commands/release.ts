@@ -1,7 +1,9 @@
 import {Command, flags} from '@oclif/command'
 import DefaultConfig from "../default-config"
 import axios from 'axios';
-import cli from 'cli-ux'
+import cli from 'cli-ux';
+
+const logSymbols = require('log-symbols');
 
 export default class Release extends Command {
     static description = 'create new release'
@@ -27,7 +29,7 @@ export default class Release extends Command {
     }
 
     private static async fetchReleaseDescriptionFromChangeLog(owner: string, repo: string, branch: string, version: string | undefined): Promise<string> {
-        cli.action.start('fetching release description from change log');
+        cli.action.start('Fetching release description from change log');
         await cli.wait();
         const changeLogURL = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/CHANGELOG.md`
         const rawChangeLog = await axios.get(changeLogURL);
@@ -35,7 +37,7 @@ export default class Release extends Command {
         const regex = new RegExp(`## ${version}([\\s\\S]*?)## \\d`, 'gm');
         const str = changeLogData.match(regex)[0];
         const releaseDescription = str.substring(0, str.lastIndexOf("\n"));
-        cli.action.stop();
+        cli.action.stop(logSymbols.success);
         return releaseDescription;
     }
 }

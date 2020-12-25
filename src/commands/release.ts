@@ -17,11 +17,12 @@ export default class Release extends Command {
 
     async run() {
         const {flags} = this.parse(Release);
-        await this.getChangeLog(flags.branch, flags.version);
+        const releaseDescription = await this.getChangeLog(flags.branch, flags.version);
+        this.log(releaseDescription);
         this.exit();
     }
 
-    private async getChangeLog(branch: string, version: string | undefined): Promise<void> {
+    private async getChangeLog(branch: string, version: string | undefined): Promise<string> {
         const owner = DefaultConfig.owner;
         const repo = DefaultConfig.repo;
         const changeLogURL = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/CHANGELOG.md`
@@ -29,7 +30,6 @@ export default class Release extends Command {
         const changeLogResponse = await axios.get(changeLogURL);
         const changeLogData = changeLogResponse.data;
         const regex = new RegExp(`## ${version}([\\s\\S]*?)## \\d`, 'gm');
-        const releaseDescription = changeLogData.match(regex);
-        this.log(releaseDescription);
+        return  changeLogData.match(regex);
     }
 }

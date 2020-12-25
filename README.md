@@ -54,12 +54,14 @@ create new release
 
 ```
 USAGE
-  $ besucli release [BRANCH] [VERSION]
+  $ besucli release
 
 OPTIONS
   -b, --branch=branch  [default: master] branch to release
   -f, --force
   -h, --help           show CLI help
+  -o, --owner=owner    [default: hyperledger] github owner
+  -r, --repo=repo      [default: besu] github repository
 ```
 
 _See code: [src/commands/release.ts](https://github.com/abdelhamidbakhta/besucli/blob/main/src/commands/release.ts)_

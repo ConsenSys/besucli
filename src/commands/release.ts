@@ -27,6 +27,14 @@ export default class Release extends Command {
             flags.branch,
             flags.version
         );
+        const githubAccessToken = await Release.getGithubAccessToken();
+        await Release.createGithubRelease(
+            flags.owner,
+            flags.repo,
+            flags.version,
+            releaseDescription,
+            githubAccessToken
+        );
         this.exit();
     }
 
@@ -42,6 +50,38 @@ export default class Release extends Command {
             const releaseDescription = str.substring(0, str.lastIndexOf("\n"));
             cli.action.stop(logSymbols.success);
             return releaseDescription;
+        } catch (e) {
+            cli.action.stop(logSymbols.error);
+            throw e;
+        }
+    }
+
+    private static async getGithubAccessToken(): Promise<string> {
+        let token = process.env.GITHUB_ACCESS_TOKEN;
+        if (!token) {
+            token = await cli.prompt(`${logSymbols.warning} Requiring Github Access Token`, {type: 'hide'})
+        }
+        return token as string;
+    }
+
+    private static async createGithubRelease(owner: string, repo: string, version: string | undefined, description: string, githubAccessToken: string): Promise<void> {
+        cli.action.start('Creating release using Github API');
+        await cli.wait();
+        try {
+            await axios.post(
+                `https://api.github.com/repos/${owner}/${repo}/releases`,
+                {
+                    "tag_name": version,
+                    "name": version,
+                    "body": description,
+                }, {
+                    headers: {
+                        "Accept": "application/vnd.github.v3+json",
+                        "Authorization": `token ${githubAccessToken}`
+                    }
+                }
+            );
+            cli.action.stop(logSymbols.success);
         } catch (e) {
             cli.action.stop(logSymbols.error);
             throw e;

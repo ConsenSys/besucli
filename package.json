@@ -62,7 +62,9 @@
     "@oclif/config": "^1.17.0",
     "@oclif/plugin-help": "^3.2.1",
     "axios": "^0.21.1",
+    "download": "^8.0.0",
     "log-symbols": "^4.0.0",
+    "sha256-file": "^1.0.0",
     "tslib": "^1.14.1"
   }
 }

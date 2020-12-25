@@ -2,8 +2,12 @@ import {Command, flags} from '@oclif/command'
 import DefaultConfig from "../default-config"
 import axios from 'axios';
 import cli from 'cli-ux';
+import DownloadInfo from "../model/download-info";
+import * as fs from "fs";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const logSymbols = require('log-symbols');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const download = require('download');
 
 
 export default class Release extends Command {
@@ -27,6 +31,8 @@ export default class Release extends Command {
             flags.branch,
             flags.version
         );
+        const downloadInfo = await Release.generateDownloadInfo(flags.version as string);
+
         const githubAccessToken = await Release.getGithubAccessToken();
         await Release.createGithubRelease(
             flags.owner,
@@ -63,6 +69,29 @@ export default class Release extends Command {
         }
         return token as string;
     }
+
+    private static async generateDownloadInfo(version: string): Promise<DownloadInfo> {
+        try {
+            cli.action.start('Downloading release archive');
+            const downloadLink = `https://dl.bintray.com/hyperledger-org/besu-repo/besu-${version}.zip`;
+            const tmp = fs.mkdtempSync('release-');
+            const tmpFile = `${tmp}/${version}.zip`;
+            fs.writeFileSync(tmpFile, await download(downloadLink));
+            cli.action.stop(logSymbols.success);
+            cli.action.start('Computing integrity hash');
+            new shajs.sha256().update('42').digest('hex')
+            cli.action.stop(logSymbols.success);
+            const integrityHash = "";
+            cli.action.stop(logSymbols.success);
+            fs.unlinkSync(tmpFile);
+            fs.rmdirSync(tmp);
+            return new DownloadInfo(downloadLink, integrityHash);
+        } catch (e) {
+            cli.action.stop(logSymbols.error);
+            return Promise.reject(e);
+        }
+    }
+
 
     private static async createGithubRelease(owner: string, repo: string, version: string | undefined, description: string, githubAccessToken: string): Promise<void> {
         cli.action.start('Creating release using Github API');

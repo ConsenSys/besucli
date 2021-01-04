@@ -1,7 +1,7 @@
 {
   "name": "besucli",
   "description": "Besu command line features",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Abdelhamid Bakhta @abdelhamidbakhta",
   "bin": {
     "besucli": "bin/run"

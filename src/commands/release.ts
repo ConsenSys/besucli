@@ -108,8 +108,8 @@ sha256: \`${downloadInfo.integrityHash}\`
         cli.action.start('Creating release using Github API');
         await cli.wait();
         // for testing purpose
-        const releaseName = `${new Date().getTime()}`;
-        //const releaseName = version;
+        //const releaseName = `${new Date().getTime()}`;
+        const releaseName = version;
         const requestPayload = {
             "tag_name": releaseName,
             "name": releaseName,

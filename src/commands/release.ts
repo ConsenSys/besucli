@@ -75,7 +75,8 @@ export default class Release extends Command {
     private static async generateDownloadInfo(version: string): Promise<DownloadInfo> {
         try {
             cli.action.start('Downloading release archive');
-            const downloadLink = `https://dl.bintray.com/hyperledger-org/besu-repo/besu-${version}.zip`;
+            //const downloadLink = `https://dl.bintray.com/hyperledger-org/besu-repo/besu-${version}.zip`;
+            const downloadLink = `https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/${version}/besu-${version}.zip`
             const tmp = fs.mkdtempSync('release-');
             const tmpFile = `${tmp}/${version}.zip`;
             fs.writeFileSync(tmpFile, await download(downloadLink));

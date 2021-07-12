@@ -19,7 +19,7 @@ $ npm install -g besucli
 $ besucli COMMAND
 running command...
 $ besucli (-v|--version|version)
-besucli/0.0.5 darwin-x64 node-v15.3.0
+besucli/0.0.6 darwin-x64 node-v16.3.0
 $ besucli --help [COMMAND]
 USAGE
   $ besucli COMMAND
@@ -65,5 +65,5 @@ OPTIONS
   -v, --version=version  version to release
 ```
 
-_See code: [src/commands/release.ts](https://github.com/abdelhamidbakhta/besucli/blob/v0.0.5/src/commands/release.ts)_
+_See code: [src/commands/release.ts](https://github.com/abdelhamidbakhta/besucli/blob/v0.0.6/src/commands/release.ts)_
 <!-- commandsstop -->
